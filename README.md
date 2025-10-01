@@ -57,12 +57,3 @@ Licencia
 ```
 Este proyecto está bajo la licencia GPL-3.0.
 Consulta el archivo LICENSE para más información.
----
-
-
-
-
-
-
-
-
