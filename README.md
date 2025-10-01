@@ -41,13 +41,12 @@ Copiar código
 ## Cómo Ejecutar
 
 Clona el repositorio:
-```bash
+```
 git clone https://github.com/tu-usuario/draons-rise.git
 cd draons-rise
 Compila y ejecuta:
 
 ```
-bash
 
 Copiar código
 ```
@@ -58,14 +57,10 @@ Controles
 WASD / Flechas → Movimiento del personaje
 Ratón → Interfaz y acciones
 ```
-bash
 Licencia
+```
 Este proyecto está bajo la licencia GPL-3.0.
 Consulta el archivo LICENSE para más información.
-
-yaml
-Copiar código
-
 ---
 
 
