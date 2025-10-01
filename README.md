@@ -7,7 +7,7 @@ Un prototipo de videojuego 2D desarrollado en **Java puro** que sirve como base 
 
 ---
 
-## 🎮 Características
+## Características
 - Motor de juego personalizado desde cero  
 - Sistema de física 2D con vectores  
 - Animaciones fluidas  
@@ -17,12 +17,12 @@ Un prototipo de videojuego 2D desarrollado en **Java puro** que sirve como base 
 
 ---
 
-## 🚀 Requisitos
+## Requisitos
 - Java **17** o superior  
 
 ---
 
-## 📦 Estructura del Proyecto
+## Estructura del Proyecto
 src/
 ├── core/ # Lógica principal del juego
 │ ├── inputs/ # Manejo de entrada
@@ -38,7 +38,7 @@ Copiar código
 
 ---
 
-## 🛠️ Cómo Ejecutar
+## Cómo Ejecutar
 
 Clona el repositorio:
 ```bash
@@ -46,16 +46,19 @@ git clone https://github.com/tu-usuario/draons-rise.git
 cd draons-rise
 Compila y ejecuta:
 
+```
 bash
 
 Copiar código
+```
 mvn clean compile exec:java -Dexec.mainClass="core.main.Main"
+```
 Controles
+```
 WASD / Flechas → Movimiento del personaje
-
 Ratón → Interfaz y acciones
-
-```bash
+```
+bash
 Licencia
 Este proyecto está bajo la licencia GPL-3.0.
 Consulta el archivo LICENSE para más información.
