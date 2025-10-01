@@ -12,7 +12,6 @@ Un prototipo de videojuego 2D desarrollado en **Java puro** que sirve como base 
 - Sistema de física 2D con vectores  
 - Animaciones fluidas  
 - Gestión de recursos (imágenes, sonidos, fuentes)  
-- Sistema de niveles y menús interactivos  
 - Control por teclado y ratón  
 
 ---
@@ -25,14 +24,14 @@ Un prototipo de videojuego 2D desarrollado en **Java puro** que sirve como base 
 ## Estructura del Proyecto
 ```
 src/
-core/ # Lógica principal del juego
-  inputs/ # Manejo de entrada
-  main/ # Clases principales
-  math/ # Matemáticas y física
-entities/ # Entidades del juego
-graphics/ # Renderizado
-modes/ # Modos de juego y menús
-resources/ # Recursos del juego
+├── core/ # Lógica principal del juego
+│ ├── inputs/ # Manejo de entrada
+│ ├── main/ # Clases principales
+│ └── math/ # Matemáticas y física
+├── entities/ # Entidades del juego
+├── graphics/ # Renderizado
+├── modes/ # Modos de juego y menús
+└── resources/ # Recursos del juego
 ```
 
 ## Cómo Ejecutar
