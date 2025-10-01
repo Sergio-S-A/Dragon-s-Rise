@@ -23,6 +23,7 @@ Un prototipo de videojuego 2D desarrollado en **Java puro** que sirve como base 
 ---
 
 ## Estructura del Proyecto
+```
 src/
 core/ # Lógica principal del juego
   inputs/ # Manejo de entrada
@@ -32,11 +33,7 @@ entities/ # Entidades del juego
 graphics/ # Renderizado
 modes/ # Modos de juego y menús
 resources/ # Recursos del juego
-
-yaml
-Copiar código
-
----
+```
 
 ## Cómo Ejecutar
 
