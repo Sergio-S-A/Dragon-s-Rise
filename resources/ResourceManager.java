@@ -11,8 +11,6 @@ import java.util.function.Supplier;
 
 public class ResourceManager {
 
-    private static final int SCALE_HINT = Image.SCALE_REPLICATE;
-
     private final Map<String, BufferedImage> imageCache = new HashMap<>();
     private final Map<String, Font> fontCache = new HashMap<>();
     private final Map<String, Clip> audioCache = new HashMap<>();
@@ -37,7 +35,6 @@ public class ResourceManager {
         return resized;
     }
 
-
     public Font loadFont(String fileName, float size) {
         String key = buildFontKey(fileName, size);
         return cacheResource(fontCache, key,
@@ -48,12 +45,10 @@ public class ResourceManager {
         return String.format("%s_%f", fileName, size);
     }
 
-
     public Clip loadAudio(String fileName) {
         return cacheResource(audioCache, fileName,
                 () -> ResourceLoader.loadAudio(GameConstants.AUDIO_PATH + fileName));
     }
-
 
     private <T> T cacheResource(Map<String, T> cache, String key, Supplier<T> loader) {
         return cache.computeIfAbsent(key, k -> {

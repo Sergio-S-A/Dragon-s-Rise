@@ -1,7 +1,7 @@
 package ui.components;
 
 import core.inputs.InputManager;
-import core.math.Vector2D;
+import core.physics.Vector2D;
 import resources.ResourceManager;
 
 import java.awt.*;
@@ -21,18 +21,22 @@ public class Button extends Component {
 
     // Dependencies
     private final Text textComponent;
+
     // Visual resources
     private final BufferedImage pressedImage;
     private final BufferedImage unpressedImage;
+
     // Position and dimensions
     private final Vector2D position;
     private final int width;
     private final int height;
     private ActionButton actionButton;
+
     // State
     private boolean isPressed;
     private boolean isHovered;
 
+    // Constructor
     private Button(Builder builder) {
         this.textComponent = builder.textComponent;
         this.position = builder.position;
@@ -41,7 +45,6 @@ public class Button extends Component {
         this.actionButton = builder.actionButton;
         this.width = pressedImage.getWidth();
         this.height = pressedImage.getHeight();
-
         centerTextInButton();
     }
 
@@ -118,7 +121,7 @@ public class Button extends Component {
         return new Vector2D(centeredX, centeredY);
     }
 
-    // Getters for potential future use
+    // Setters and Getters
     public Vector2D getPosition() {
         return new Vector2D(position.x(), position.y());
     }
@@ -143,6 +146,7 @@ public class Button extends Component {
         this.actionButton = actionButton;
     }
 
+    // Builder
     public static class Builder {
 
         // Required dependencies
@@ -157,6 +161,7 @@ public class Button extends Component {
         private BufferedImage unpressedImage;
         private ActionButton actionButton;
 
+        // Constructor
         public Builder(ResourceManager resourceManager) {
             this.resourceManager = validateResourceManager(resourceManager);
             initializeDefaultsValues();

@@ -38,7 +38,6 @@ public class Stage extends Canvas {
         }
     }
 
-
     private void clearScreen(Graphics2D graphics2d) {
         graphics2d.setColor(Color.BLACK);
         graphics2d.fillRect(0, 0, getWidth(), getHeight());

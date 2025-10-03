@@ -1,9 +1,8 @@
 package entities.mobs;
 
 import core.inputs.Keyboard;
-import core.main.Core;
 import core.main.GameConstants;
-import core.math.Vector2D;
+import core.physics.Vector2D;
 import entities.entity.Entity;
 import graphics.AnimationManager;
 import resources.ResourceManager;
@@ -34,10 +33,9 @@ public class Wolf extends Entity {
         isometricCenter = getIsometricCenter();
     }
 
-
     @Override
     public void update() {
-        updatePhysics(Core.getDeltaTime());
+        updatePhysics();
         processInputToAttack();
         processInputToAnimate();
     }

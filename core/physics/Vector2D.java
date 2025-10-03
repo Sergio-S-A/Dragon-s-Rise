@@ -1,4 +1,4 @@
-package core.math;
+package core.physics;
 
 
 public class Vector2D {
@@ -59,6 +59,11 @@ public class Vector2D {
         this.x = tmpX * cos - tmpY * sin;
         this.y = tmpX * sin + tmpY * cos;
         return this;
+    }
+
+    public Vector2D rotateTo(double angle) {
+        double angleDiff = angle - this.angle();
+        return this.rotate(angleDiff);
     }
 
     public double x() {

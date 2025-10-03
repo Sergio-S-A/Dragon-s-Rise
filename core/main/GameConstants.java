@@ -4,13 +4,12 @@ public class GameConstants {
     // Game settings
     public static final int FPS = 60;
     public static final double TIME_PER_TICK = 1_000_000_000.0 / FPS;
-    public static final int TILE_SIZE = 32;
     public static final int WINDOW_WIDTH = 900;
     public static final int WINDOW_HEIGHT = 600;
+    public static final int TILE_SIZE = 64;
 
     // Physics
-    public static final float GRAVITY = 0.5f;
-    public static final float FRICTION = 0.9f;
+    public static final String TILE_PATH_CONFIG_STRING = "isometric_tileset/tile_%03d.png";
 
     // Numbers
     public static final double ONE_MILLION = 1_000_000.0;

@@ -1,9 +1,9 @@
 package modes.menus;
 
 import core.main.GameConstants;
-import core.math.Vector2D;
+import core.physics.Vector2D;
 import modes.Mode;
-import modes.levels.Level1;
+import modes.levels.TestLevel;
 import resources.ResourceManager;
 import ui.components.Button;
 import ui.components.Text;
@@ -39,7 +39,6 @@ public class Menu extends Mode {
     // Resources
     private Font titleFont;
     private Font buttonFont;
-
 
     public Menu(ResourceManager resourceManager) {
         super(resourceManager);
@@ -82,8 +81,8 @@ public class Menu extends Mode {
     private void createButtons() {
         playButton = createMenuButton(PLAY_BUTTON_TEXT, getPlayButtonYPosition());
         playButton.setActionButton(() -> {
-            Level1 level1 = new Level1(resourceManager);
-            Mode.changeNowMode(level1);
+            TestLevel testLevel = new TestLevel(resourceManager);
+            Mode.changeNowMode(testLevel);
         });
         optionsButton = createMenuButton(OPTIONS_BUTTON_TEXT, getOptionsButtonYPosition());
         exitButton = createMenuButton(EXIT_BUTTON_TEXT, getExitButtonYPosition());

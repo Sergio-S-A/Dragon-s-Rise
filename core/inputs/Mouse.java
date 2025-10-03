@@ -1,6 +1,6 @@
 package core.inputs;
 
-import core.math.Vector2D;
+import core.physics.Vector2D;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

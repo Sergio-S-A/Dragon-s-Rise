@@ -1,6 +1,6 @@
 package ui.components;
 
-import core.math.Vector2D;
+import core.physics.Vector2D;
 import resources.ResourceManager;
 
 import java.awt.*;
@@ -32,6 +32,7 @@ public class Text extends Component {
     private int cachedTextWidth;
     private boolean metricsNeedUpdate = true;
 
+    // Constructor
     private Text(Builder builder) {
         this.text = builder.text;
         this.position = new Vector2D(builder.position.x(), builder.position.y());
@@ -123,6 +124,7 @@ public class Text extends Component {
         return Math.max(fontSize / OUTLINE_SIZE_DIVISOR, DEFAULT_OUTLINE_SIZE);
     }
 
+    // Setters and Getters
     public void setPosition(double x, double y) {
         setPosition(new Vector2D(x, y));
     }
@@ -234,7 +236,7 @@ public class Text extends Component {
         }
     }
 
-
+    // Builder
     public static class Builder {
 
         // Required dependency
@@ -251,6 +253,7 @@ public class Text extends Component {
         private boolean hasOutline;
         private Color outlineColor;
 
+        // Constructor
         public Builder(ResourceManager resourceManager) {
             this.resourceManager = validateResourceManager(resourceManager);
             initializeDefaultValues();

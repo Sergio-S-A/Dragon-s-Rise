@@ -1,17 +1,17 @@
 package entities.entity;
 
-import core.math.Vector2D;
+import core.physics.Vector2D;
 
 import java.awt.*;
 
 public abstract class Entity {
 
     private final PhysicsUpdater physicsUpdater;
+    protected double forceScale;
     private Vector2D position;
     private Vector2D velocity;
     private Vector2D acceleration;
     private Vector2D force;
-    private double forceScale;
     private double mass;
     private double maxSpeed;
     private double maxAcceleration;
@@ -34,8 +34,10 @@ public abstract class Entity {
 
     public abstract void draw(Graphics2D graphics2d);
 
-    public void updatePhysics(double deltaTime) {
-        physicsUpdater.update(this, deltaTime);
+    public void updatePhysics() {
+        if (physicsUpdater != null) {
+            physicsUpdater.update(this);
+        }
     }
 
     public Vector2D getPosition() {
@@ -145,6 +147,5 @@ public abstract class Entity {
         protected abstract T self();
 
         public abstract Entity build();
-
     }
 }

@@ -3,7 +3,7 @@ package modes.menus;
 import java.util.Random;
 
 public class LevelData {
-    public static int[][] level1 = generarMatriz(30, 30);
+    public static int[][] testLevel = generarMatriz(300, 300);
 
     public static int[][] generarMatriz(int filas, int columnas) {
         int[][] matriz = new int[filas][columnas];
