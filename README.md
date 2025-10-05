@@ -1,4 +1,4 @@
-# Draon's Rise - Prototipo de Videojuego 2D con vista isometrica
+# Draon's Rise - Prototipo de Videojuego 2D
 
 **Lenguaje:** Java  
 **Licencia:** GPL v3  
@@ -27,30 +27,31 @@ src/
 ├── core/ # Lógica principal del juego
 │ ├── inputs/ # Manejo de entrada
 │ ├── main/ # Clases principales
-│ └── physics/ # Matemáticas y física
+│ └── math/ # Matemáticas y física
 ├── entities/ # Entidades del juego
 ├── graphics/ # Renderizado
 ├── modes/ # Modos de juego y menús
-├── resources/ # Recursos del juego
-└── ui / # Componentes de la interfaz
+└── resources/ # Recursos del juego
 ```
 
 ## Cómo Ejecutar
 
 Clona el repositorio:
 ```
-git clone https://github.com/Sergio-S-A/Dragon-s-Rise.git
-cd Dragon-s-Rise
+git clone https://github.com/tu-usuario/draons-rise.git
+cd draons-rise
 Compila y ejecuta:
 
 ```
 
-
+Copiar código
+```
+mvn clean compile exec:java -Dexec.mainClass="core.main.Main"
+```
 Controles
 ```
 WASD / Flechas → Movimiento del personaje
-Espacio / Ataque
-Ratón → Interfaz
+Ratón → Interfaz y acciones
 ```
 Licencia
 ```

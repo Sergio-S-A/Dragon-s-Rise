@@ -2,9 +2,11 @@ package core.physics;
 
 import core.main.Core;
 import entities.entity.Entity;
-import entities.entity.PhysicsUpdater;
 
 public class PhysicsEngine implements PhysicsUpdater {
+
+    private final Vector2D tempVector2D = new Vector2D(0, 0);
+
     @Override
     public void update(Entity entity) {
         updateAcceleration(entity);
@@ -16,7 +18,9 @@ public class PhysicsEngine implements PhysicsUpdater {
 
     private void updateAcceleration(Entity entity) {
         entity.getAcceleration().scale(0);
-        entity.getAcceleration().add(entity.getForce().copy().scale(1 / entity.getMass()));
+        tempVector2D.set(entity.getForce().x(), entity.getForce().y());
+        tempVector2D.scale(1 / entity.getMass());
+        entity.getAcceleration().add(tempVector2D);
     }
 
     private void limitAcceleration(Entity entity) {
@@ -27,7 +31,9 @@ public class PhysicsEngine implements PhysicsUpdater {
     }
 
     private void updateVelocity(Entity entity) {
-        entity.getVelocity().add(entity.getAcceleration().copy().scale(Core.getDeltaTime()));
+        tempVector2D.set(entity.getAcceleration().x(), entity.getAcceleration().y());
+        tempVector2D.scale(Core.getDeltaSeconds());
+        entity.getVelocity().add(tempVector2D);
     }
 
     private void limitVelocity(Entity entity) {
@@ -41,16 +47,20 @@ public class PhysicsEngine implements PhysicsUpdater {
     }
 
     private void applyFriction(Entity entity) {
-        double friction = entity.getFrictionCoefficient() * entity.getMass() * Core.getDeltaTime();
+        double friction = entity.getFrictionCoefficient() * entity.getMass() * Core.getDeltaSeconds();
         double velocity = entity.getVelocity().magnitude();
         if (velocity > friction) {
-            entity.getVelocity().sub(entity.getVelocity().copy().normalize().scale(friction));
+            tempVector2D.set(entity.getVelocity().x(), entity.getVelocity().y());
+            tempVector2D.normalize().scale(friction);
+            entity.getVelocity().sub(tempVector2D);
         } else {
             entity.getVelocity().scale(0);
         }
     }
 
     private void updatePosition(Entity entity) {
-        entity.getPosition().add(entity.getVelocity().copy().scale(Core.getDeltaTime()));
+        tempVector2D.set(entity.getVelocity().x(), entity.getVelocity().y());
+        tempVector2D.scale(Core.getDeltaSeconds());
+        entity.getPosition().add(tempVector2D);
     }
 }

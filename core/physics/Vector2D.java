@@ -66,16 +66,17 @@ public class Vector2D {
         return this.rotate(angleDiff);
     }
 
+    public void set(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public double x() {
         return x;
     }
 
     public double y() {
         return y;
-    }
-
-    public Vector2D copy() {
-        return new Vector2D(x, y);
     }
 
     @Override

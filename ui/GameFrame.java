@@ -5,7 +5,6 @@ import core.inputs.Keyboard;
 import core.inputs.Mouse;
 import core.main.GameConstants;
 import graphics.Stage;
-import resources.ResourceManager;
 
 import javax.swing.*;
 
@@ -38,14 +37,14 @@ public class GameFrame extends JFrame {
         this.setTitle("Dragon's Rise");
     }
 
-    public void init(ResourceManager resourceManager) {
+    public void init() {
         mouse = new Mouse();
         keyboard = new Keyboard();
 
         InputManager.getInstance().setKeyboard(keyboard);
         InputManager.getInstance().setMouse(mouse);
 
-        stage = new Stage(resourceManager);
+        stage = new Stage();
         stage.addMouseListener(mouse);
         stage.addMouseMotionListener(mouse);
         stage.addKeyListener(keyboard);

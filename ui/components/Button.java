@@ -1,8 +1,10 @@
 package ui.components;
 
 import core.inputs.InputManager;
+import core.inputs.Mouse;
+import core.main.Core;
+import core.main.GameConstants;
 import core.physics.Vector2D;
-import resources.ResourceManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,27 +13,18 @@ public class Button extends Component {
 
     // Constants
     private static final int LEFT_MOUSE_BUTTON = 1;
-    private static final int TEXT_VERTICAL_ADJUSTMENT = 4;
-    private static final int DEFAULT_BUTTON_WIDTH = 200;
-    private static final int DEFAULT_BUTTON_HEIGHT = 50;
-
-    // Resource paths
-    private static final String DEFAULT_PRESSED_IMAGE_PATH = "keney_ui_pack_rpg/buttonLong_blue_pressed.png";
-    private static final String DEFAULT_UNPRESSED_IMAGE_PATH = "keney_ui_pack_rpg/buttonLong_blue.png";
-
     // Dependencies
     private final Text textComponent;
-
     // Visual resources
     private final BufferedImage pressedImage;
     private final BufferedImage unpressedImage;
-
     // Position and dimensions
-    private final Vector2D position;
+    private final Vector2D buttonPosition;
     private final int width;
     private final int height;
+    private final Vector2D mousePosition;
+    private final Mouse mouse;
     private ActionButton actionButton;
-
     // State
     private boolean isPressed;
     private boolean isHovered;
@@ -39,12 +32,14 @@ public class Button extends Component {
     // Constructor
     private Button(Builder builder) {
         this.textComponent = builder.textComponent;
-        this.position = builder.position;
+        this.buttonPosition = builder.buttonPosition;
         this.pressedImage = builder.pressedImage;
         this.unpressedImage = builder.unpressedImage;
         this.actionButton = builder.actionButton;
         this.width = pressedImage.getWidth();
         this.height = pressedImage.getHeight();
+        this.mouse = InputManager.getInstance().getMouse();
+        this.mousePosition = new Vector2D(mouse.getPointX(), mouse.getPointY());
         centerTextInButton();
     }
 
@@ -54,10 +49,8 @@ public class Button extends Component {
     }
 
     private void updateMouseInteraction() {
-        var mouse = InputManager.getInstance().getMouse();
-        Vector2D mousePosition = new Vector2D(mouse.getPointX(), mouse.getPointY());
-
-        if (isMouseInsideButton(mousePosition)) {
+        mousePosition.set(mouse.getPointX(), mouse.getPointY());
+        if (isMouseInsideButton()) {
             isHovered = true;
             isPressed = mouse.isButtonPressed(LEFT_MOUSE_BUTTON);
             if (mouse.isButtonClicked(LEFT_MOUSE_BUTTON)) {
@@ -79,8 +72,8 @@ public class Button extends Component {
         }
     }
 
-    private boolean isMouseInsideButton(Vector2D mousePosition) {
-        return isPointInBounds(mousePosition, position, width, height);
+    private boolean isMouseInsideButton() {
+        return isPointInBounds(mousePosition, buttonPosition, width, height);
     }
 
     private boolean isPointInBounds(Vector2D point, Vector2D bounds, int width, int height) {
@@ -98,7 +91,7 @@ public class Button extends Component {
 
     private void renderButtonBackground(Graphics2D graphics2d) {
         BufferedImage currentImage = shouldShowPressedState() ? pressedImage : unpressedImage;
-        graphics2d.drawImage(currentImage, (int) position.x(), (int) position.y(), null);
+        graphics2d.drawImage(currentImage, (int) buttonPosition.x(), (int) buttonPosition.y(), null);
     }
 
     private void renderButtonText(Graphics2D graphics2d) {
@@ -111,19 +104,20 @@ public class Button extends Component {
 
     private void centerTextInButton() {
         Vector2D centeredTextPosition = calculateCenteredTextPosition();
-        textComponent.setPosition(centeredTextPosition);
+        textComponent.setPosition(centeredTextPosition.x(), centeredTextPosition.y());
         textComponent.setAlignment(Text.Alignment.CENTER);
     }
 
     private Vector2D calculateCenteredTextPosition() {
-        double centeredX = position.x() + (double) width / 2;
-        double centeredY = position.y() + (double) height / 2 + (double) textComponent.getHeight() / TEXT_VERTICAL_ADJUSTMENT;
+        double centeredX = buttonPosition.x() + (double) width * GameConstants.BUTTON_TEXT_HORIZONTAL_CENTER_RATIO;
+        double centeredY = buttonPosition.y() + (double) height * GameConstants.BUTTON_TEXT_VERTICAL_CENTER_RATIO
+                + (double) textComponent.getHeight() / GameConstants.BUTTON_TEXT_BASELINE_ADJUSTMENT;
         return new Vector2D(centeredX, centeredY);
     }
 
     // Setters and Getters
-    public Vector2D getPosition() {
-        return new Vector2D(position.x(), position.y());
+    public Vector2D getButtonPosition() {
+        return buttonPosition;
     }
 
     public int getWidth() {
@@ -149,12 +143,9 @@ public class Button extends Component {
     // Builder
     public static class Builder {
 
-        // Required dependencies
-        private final ResourceManager resourceManager;
-
         // Required components
         private Text textComponent;
-        private Vector2D position;
+        private Vector2D buttonPosition;
 
         // Optional components with defaults
         private BufferedImage pressedImage;
@@ -162,20 +153,12 @@ public class Button extends Component {
         private ActionButton actionButton;
 
         // Constructor
-        public Builder(ResourceManager resourceManager) {
-            this.resourceManager = validateResourceManager(resourceManager);
+        public Builder() {
             initializeDefaultsValues();
         }
 
-        private ResourceManager validateResourceManager(ResourceManager resourceManager) {
-            if (resourceManager == null) {
-                throw new IllegalArgumentException("ResourceManager cannot be null");
-            }
-            return resourceManager;
-        }
-
         private void initializeDefaultsValues() {
-            this.position = new Vector2D(0, 0);
+            this.buttonPosition = new Vector2D(0, 0);
             this.actionButton = createNoOpAction();
             this.pressedImage = loadDefaultPressedImage();
             this.unpressedImage = loadDefaultUnpressedImage();
@@ -191,18 +174,11 @@ public class Button extends Component {
             return this;
         }
 
-        public Builder setPosition(Vector2D position) {
-            this.position = position;
+        public Builder setButtonPosition(double x, double y) {
+            buttonPosition.set(x, y);
             return this;
         }
 
-        public Builder setPosition(int x, int y) {
-            return setPosition(new Vector2D(x, y));
-        }
-
-        public Builder setPosition(double x, double y) {
-            return setPosition(new Vector2D(x, y));
-        }
 
         public Builder setPressedImage(BufferedImage pressedImage) {
             this.pressedImage = pressedImage;
@@ -240,7 +216,7 @@ public class Button extends Component {
             if (textComponent == null) {
                 throw new IllegalStateException("Text component must be set before building button");
             }
-            if (position == null) {
+            if (buttonPosition == null) {
                 throw new IllegalStateException("Position must be set before building button");
             }
         }
@@ -268,18 +244,18 @@ public class Button extends Component {
         }
 
         private BufferedImage loadDefaultPressedImage() {
-            return resourceManager.loadImage(
-                    DEFAULT_PRESSED_IMAGE_PATH,
-                    DEFAULT_BUTTON_WIDTH,
-                    DEFAULT_BUTTON_HEIGHT
+            return Core.getResourceManager().loadImage(
+                    GameConstants.DEFAULT_PRESSED_IMAGE_PATH,
+                    GameConstants.DEFAULT_BUTTON_WIDTH,
+                    GameConstants.DEFAULT_BUTTON_HEIGHT
             );
         }
 
         private BufferedImage loadDefaultUnpressedImage() {
-            return resourceManager.loadImage(
-                    DEFAULT_UNPRESSED_IMAGE_PATH,
-                    DEFAULT_BUTTON_WIDTH,
-                    DEFAULT_BUTTON_HEIGHT
+            return Core.getResourceManager().loadImage(
+                    GameConstants.DEFAULT_UNPRESSED_IMAGE_PATH,
+                    GameConstants.DEFAULT_BUTTON_WIDTH,
+                    GameConstants.DEFAULT_BUTTON_HEIGHT
             );
         }
     }

@@ -1,23 +1,16 @@
 package ui.components;
 
+import core.main.Core;
+import core.main.GameConstants;
 import core.physics.Vector2D;
-import resources.ResourceManager;
 
 import java.awt.*;
 
 public class Text extends Component {
 
-    // Constants
-    private static final int DEFAULT_OUTLINE_SIZE = 1;
-    private static final int OUTLINE_SIZE_DIVISOR = 12;
-    private static final int DEFAULT_FONT_SIZE = 32;
-
-    // Resource paths
-    private static final String DEFAULT_FONT_PATH = "Tiny5-Regular.ttf";
-
     // Text properties
     private String text;
-    private Vector2D position;
+    private final Vector2D position;
     private Color color;
     private Font font;
     private Alignment alignment;
@@ -121,16 +114,12 @@ public class Text extends Component {
     }
 
     private int calculateOutlineSize(int fontSize) {
-        return Math.max(fontSize / OUTLINE_SIZE_DIVISOR, DEFAULT_OUTLINE_SIZE);
+        return Math.max(fontSize / GameConstants.OUTLINE_SIZE_DIVISOR, GameConstants.MIN_OUTLINE_SIZE);
     }
 
     // Setters and Getters
     public void setPosition(double x, double y) {
-        setPosition(new Vector2D(x, y));
-    }
-
-    public void setPosition(int x, int y) {
-        setPosition(new Vector2D(x, y));
+        position.set(x, y);
     }
 
     public void setOutline(boolean enableOutline) {
@@ -153,13 +142,7 @@ public class Text extends Component {
     }
 
     public Vector2D getPosition() {
-        return new Vector2D(position.x(), position.y());
-    }
-
-    public void setPosition(Vector2D newPosition) {
-        if (newPosition != null) {
-            this.position = new Vector2D(newPosition.x(), newPosition.y());
-        }
+        return position;
     }
 
     public Color getColor() {
@@ -240,7 +223,6 @@ public class Text extends Component {
     public static class Builder {
 
         // Required dependency
-        private final ResourceManager resourceManager;
 
         // Text properties with defaults
         private String text;
@@ -254,8 +236,7 @@ public class Text extends Component {
         private Color outlineColor;
 
         // Constructor
-        public Builder(ResourceManager resourceManager) {
-            this.resourceManager = validateResourceManager(resourceManager);
+        public Builder() {
             initializeDefaultValues();
         }
 
@@ -269,29 +250,16 @@ public class Text extends Component {
             this.font = createDefaultFont();
         }
 
-        private ResourceManager validateResourceManager(ResourceManager resourceManager) {
-            if (resourceManager == null) {
-                throw new IllegalArgumentException("ResourceManager cannot be null");
-            }
-            return resourceManager;
-        }
-
         public Builder setText(String text) {
             this.text = text != null ? text : "";
             return this;
         }
 
-        public Builder setPosition(Vector2D position) {
-            this.position = position != null ? position : new Vector2D(0, 0);
-            return this;
-        }
-
         public Builder setPosition(double x, double y) {
-            return setPosition(new Vector2D(x, y));
-        }
-
-        public Builder setPosition(int x, int y) {
-            return setPosition(new Vector2D(x, y));
+            if (position != null) {
+                this.position.set(x, y);
+            }
+            return this;
         }
 
         public Builder setColor(Color color) {
@@ -309,7 +277,7 @@ public class Text extends Component {
         }
 
         public Builder setFont(String fontPath, int size) {
-            Font customFont = resourceManager.loadFont(fontPath, Math.max(size, 1));
+            Font customFont = Core.getResourceManager().loadFont(fontPath, Math.max(size, 1));
             return setFont(customFont);
         }
 
@@ -351,9 +319,9 @@ public class Text extends Component {
 
         private Font createDefaultFont() {
             try {
-                return resourceManager.loadFont(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE);
+                return Core.getResourceManager().loadFont(GameConstants.DEFAULT_FONT_PATH, GameConstants.DEFAULT_FONT_SIZE);
             } catch (Exception e) {
-                return new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
+                return new Font(Font.SANS_SERIF, Font.PLAIN, GameConstants.DEFAULT_FONT_SIZE);
             }
         }
 

@@ -1,5 +1,6 @@
 package modes.levels;
 
+import core.main.Core;
 import core.main.GameConstants;
 import entities.entity.Entity;
 import modes.menus.LevelData;
@@ -7,35 +8,52 @@ import resources.ResourceManager;
 
 import java.awt.*;
 
-
 public class IsometricBackGround {
+    private final int TILE_SIZE;
+    private final Camera camera;
+    private final ResourceManager resourceManager;
+    private final int ratio;
     private int[][] imagesData;
-    private int TILE_SIZE;
-    private Camera camera;
-    private int screenX;
-    private int screenY;
-    private ResourceManager resourceManager;
+    private int playerTileX;
+    private int playerTileY;
+    private int xMin, yMin, xMax, yMax;
+    private int screenX, screenY;
 
-    public IsometricBackGround(ResourceManager resourceManager) {
-        this.resourceManager = resourceManager;
+    public IsometricBackGround() {
+        this.resourceManager = Core.getResourceManager();
         this.imagesData = LevelData.testLevel;
-        TILE_SIZE = GameConstants.TILE_SIZE;
-        camera = new Camera(GameConstants.TILE_SIZE);
+        this.TILE_SIZE = GameConstants.TILE_SIZE;
+        this.camera = new Camera(TILE_SIZE);
+        this.ratio = 19;
     }
 
     public void update(Entity player) {
         camera.update(player);
+        playerTileX = (int) (player.getPosition().x());
+        playerTileY = (int) (player.getPosition().y());
+
+        xMin = Math.max(0, playerTileX - ratio);
+        yMin = Math.max(0, playerTileY - ratio);
+        xMax = Math.min(imagesData[0].length, playerTileX + ratio);
+        yMax = Math.min(imagesData.length, playerTileY + ratio);
     }
 
     public void draw(Graphics2D graphics2d) {
-        for (int y = 0; y < imagesData.length; y++) {
-            for (int x = 0; x < imagesData[y].length; x++) {
+        for (int y = yMin; y < yMax; y++) {
+            for (int x = xMin; x < xMax; x++) {
                 calculateScreenPosition(x, y);
-                if (isVisible(screenX, screenY)) {
+                if (isVisible(x, y)) {
                     drawTile(graphics2d, imagesData[y][x]);
                 }
             }
         }
+    }
+
+    public boolean isVisible(int screenX, int screenY) {
+        return screenX > -TILE_SIZE
+                && screenX < GameConstants.WINDOW_WIDTH
+                && screenY > -TILE_SIZE
+                && screenY < GameConstants.WINDOW_HEIGHT;
     }
 
     private void calculateScreenPosition(int x, int y) {
@@ -46,11 +64,6 @@ public class IsometricBackGround {
     private void drawTile(Graphics2D graphics2d, int tileId) {
         String tilePath = createTilePath(tileId);
         graphics2d.drawImage(resourceManager.loadImage(tilePath, TILE_SIZE, TILE_SIZE), screenX, screenY, null);
-    }
-
-    public boolean isVisible(int screenX, int screenY) {
-        return screenX > -TILE_SIZE && screenX < GameConstants.WINDOW_WIDTH &&
-                screenY > -TILE_SIZE && screenY < GameConstants.WINDOW_HEIGHT;
     }
 
     private String createTilePath(int tileId) {

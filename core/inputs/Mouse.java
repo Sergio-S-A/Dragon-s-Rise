@@ -1,7 +1,5 @@
 package core.inputs;
 
-import core.physics.Vector2D;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,10 +7,10 @@ import java.awt.event.MouseMotionListener;
 public class Mouse implements MouseListener, MouseMotionListener {
 
     private final int numberOfButtons = 4;
+    private final boolean[] buttonsPressed;
+    private final boolean[] buttonsClicked;
     private int pointX;
     private int pointY;
-    private boolean buttonsPressed[];
-    private boolean buttonsClicked[];
     private boolean isDragging;
 
     public Mouse() {
@@ -77,9 +75,6 @@ public class Mouse implements MouseListener, MouseMotionListener {
         return pointY;
     }
 
-    public Vector2D getPoint() {
-        return new Vector2D(pointX, pointY);
-    }
 
     public boolean isButtonPressed(int buttonCode) {
         if (buttonCode >= 1 && buttonCode < numberOfButtons) {

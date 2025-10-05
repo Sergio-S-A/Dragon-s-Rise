@@ -1,5 +1,6 @@
 package entities.entity;
 
+import core.physics.PhysicsUpdater;
 import core.physics.Vector2D;
 
 import java.awt.*;
@@ -7,27 +8,27 @@ import java.awt.*;
 public abstract class Entity {
 
     private final PhysicsUpdater physicsUpdater;
+    private final Vector2D position;
+    private final Vector2D velocity;
+    private final Vector2D acceleration;
+    private final Vector2D force;
     protected double forceScale;
-    private Vector2D position;
-    private Vector2D velocity;
-    private Vector2D acceleration;
-    private Vector2D force;
     private double mass;
     private double maxSpeed;
     private double maxAcceleration;
     private double frictionCoefficient;
 
-    public Entity(Builder builder) {
-        this.position = builder.position;
-        this.mass = builder.mass;
-        this.maxSpeed = builder.maxSpeed;
-        this.maxAcceleration = builder.maxAcceleration;
-        this.physicsUpdater = builder.physicsUpdater;
-        this.frictionCoefficient = builder.frictionCoefficient;
+    public Entity(EntityBuilder entityBuilder) {
+        this.position = entityBuilder.position;
+        this.mass = entityBuilder.mass;
+        this.maxSpeed = entityBuilder.maxSpeed;
+        this.maxAcceleration = entityBuilder.maxAcceleration;
+        this.physicsUpdater = entityBuilder.physicsUpdater;
+        this.frictionCoefficient = entityBuilder.frictionCoefficient;
         this.velocity = new Vector2D(0, 0);
         this.acceleration = new Vector2D(0, 0);
         this.force = new Vector2D(0, 0);
-        this.forceScale = builder.forceScale;
+        this.forceScale = entityBuilder.forceScale;
     }
 
     public abstract void update();
@@ -42,10 +43,6 @@ public abstract class Entity {
 
     public Vector2D getPosition() {
         return position;
-    }
-
-    public void setPosition(Vector2D position) {
-        this.position = position;
     }
 
     public Vector2D getVelocity() {
@@ -100,7 +97,7 @@ public abstract class Entity {
         this.forceScale = forceScale;
     }
 
-    public static abstract class Builder<T extends Builder<T>> {
+    public static abstract class EntityBuilder<T extends EntityBuilder<T>> {
 
         private final Vector2D position;
         private double mass = 1;
@@ -110,7 +107,7 @@ public abstract class Entity {
         private double forceScale = 0.01;
         private PhysicsUpdater physicsUpdater;
 
-        public Builder(Vector2D position) {
+        public EntityBuilder(Vector2D position) {
             this.position = position;
         }
 

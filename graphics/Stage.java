@@ -3,7 +3,6 @@ package graphics;
 import core.main.GameConstants;
 import modes.Mode;
 import modes.menus.Menu;
-import resources.ResourceManager;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -12,8 +11,8 @@ public class Stage extends Canvas {
 
     private BufferStrategy bufferStrategy;
 
-    public Stage(ResourceManager resourceManager) {
-        Menu menu = new Menu(resourceManager);
+    public Stage() {
+        Menu menu = new Menu();
         Mode.changeNowMode(menu);
     }
 

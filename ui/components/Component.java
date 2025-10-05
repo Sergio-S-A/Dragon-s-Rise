@@ -4,8 +4,7 @@ import java.awt.*;
 
 public abstract class Component {
 
-    public Component() {
-    }
+    public Component() {}
 
     public abstract void update();
 

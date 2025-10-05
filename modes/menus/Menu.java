@@ -4,11 +4,11 @@ import core.main.GameConstants;
 import core.physics.Vector2D;
 import modes.Mode;
 import modes.levels.TestLevel;
-import resources.ResourceManager;
 import ui.components.Button;
 import ui.components.Text;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Menu extends Mode {
 
@@ -28,20 +28,27 @@ public class Menu extends Mode {
     private static final String PLAY_BUTTON_TEXT = "Jugar";
     private static final String OPTIONS_BUTTON_TEXT = "Opciones";
     private static final String EXIT_BUTTON_TEXT = "Salir";
+    private static final String ABOUT_BUTTON_TEXT = "Acerca De";
     private static final String GAME_TITLE = "Dragon's Rise";
 
     // UI Components
     private Text titleText;
     private Button playButton;
     private Button optionsButton;
+    private Button aboutButton;
     private Button exitButton;
 
     // Resources
     private Font titleFont;
     private Font buttonFont;
+    private BufferedImage backgroundImage;
 
-    public Menu(ResourceManager resourceManager) {
-        super(resourceManager);
+    public Menu() {
+        this.backgroundImage = resourceManager.loadImage(
+                "camaraSubterranea.jpg",
+                GameConstants.WINDOW_WIDTH,
+                GameConstants.WINDOW_HEIGHT
+        );
         initializeMenu();
     }
 
@@ -65,11 +72,11 @@ public class Menu extends Mode {
     }
 
     private void createTitleText() {
-        Vector2D titlePosition = createCenteredPosition(TITLE_Y_POSITION);
+        Vector2D titlePosition = createCenteredPosition();
 
-        titleText = new Text.Builder(resourceManager)
+        titleText = new Text.Builder()
                 .setText(GAME_TITLE)
-                .setPosition(titlePosition)
+                .setPosition(titlePosition.x(), titlePosition.y())
                 .setColor(FOREGROUND_COLOR)
                 .setFont(titleFont)
                 .setAlignment(Text.Alignment.CENTER)
@@ -81,10 +88,11 @@ public class Menu extends Mode {
     private void createButtons() {
         playButton = createMenuButton(PLAY_BUTTON_TEXT, getPlayButtonYPosition());
         playButton.setActionButton(() -> {
-            TestLevel testLevel = new TestLevel(resourceManager);
+            TestLevel testLevel = new TestLevel();
             Mode.changeNowMode(testLevel);
         });
         optionsButton = createMenuButton(OPTIONS_BUTTON_TEXT, getOptionsButtonYPosition());
+        aboutButton = createMenuButton(ABOUT_BUTTON_TEXT, getAboutButtonYPosition());
         exitButton = createMenuButton(EXIT_BUTTON_TEXT, getExitButtonYPosition());
         exitButton.setActionButton(() -> System.exit(0));
     }
@@ -93,14 +101,14 @@ public class Menu extends Mode {
         Text buttonText = createButtonText(text);
         Vector2D buttonPosition = createButtonPosition(yPosition);
 
-        return new Button.Builder(resourceManager)
-                .setPosition(buttonPosition)
+        return new Button.Builder()
+                .setButtonPosition(buttonPosition.x(), buttonPosition.y())
                 .setTextComponent(buttonText)
                 .build();
     }
 
     private Text createButtonText(String text) {
-        return new Text.Builder(resourceManager)
+        return new Text.Builder()
                 .setText(text)
                 .setColor(FOREGROUND_COLOR)
                 .setFont(buttonFont)
@@ -110,26 +118,30 @@ public class Menu extends Mode {
                 .build();
     }
 
-    private Vector2D createCenteredPosition(double tileYPosition) {
-        double centeredX = (double) GameConstants.WINDOW_WIDTH / 2;
-        return new Vector2D(centeredX, tileYPosition);
+    private Vector2D createCenteredPosition() {
+        double centeredX = (double) GameConstants.WINDOW_WIDTH_MEDIUM;
+        return new Vector2D(centeredX, TITLE_Y_POSITION);
     }
 
     private Vector2D createButtonPosition(double yPosition) {
-        double buttonX = (double) GameConstants.WINDOW_WIDTH / 2 - BUTTON_WIDTH_OFFSET;
+        double buttonX = (double) GameConstants.WINDOW_WIDTH_MEDIUM - BUTTON_WIDTH_OFFSET;
         return new Vector2D(buttonX, yPosition);
     }
 
     private double getPlayButtonYPosition() {
-        return (double) GameConstants.WINDOW_HEIGHT / 2 - FIRST_BUTTON_Y_OFFSET;
+        return (double) GameConstants.WINDOW_HEIGHT_MEDIUM - FIRST_BUTTON_Y_OFFSET;
     }
 
     private double getOptionsButtonYPosition() {
         return getPlayButtonYPosition() + BUTTON_SPACING;
     }
 
-    private double getExitButtonYPosition() {
+    private double getAboutButtonYPosition() {
         return getOptionsButtonYPosition() + BUTTON_SPACING;
+    }
+
+    private double getExitButtonYPosition() {
+        return getAboutButtonYPosition() + BUTTON_SPACING;
     }
 
     @Override
@@ -141,6 +153,7 @@ public class Menu extends Mode {
         titleText.update();
         playButton.update();
         optionsButton.update();
+        aboutButton.update();
         exitButton.update();
     }
 
@@ -151,18 +164,14 @@ public class Menu extends Mode {
     }
 
     private void renderBackground(Graphics2D graphics2d) {
-        graphics2d.drawImage(
-                resourceManager.loadImage("camaraSubterranea.jpg", GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT),
-                0,
-                0,
-                null
-        );
+        graphics2d.drawImage(backgroundImage, 0, 0, null);
     }
 
     private void renderUIComponents(Graphics2D graphics2d) {
         titleText.draw(graphics2d);
         playButton.draw(graphics2d);
         optionsButton.draw(graphics2d);
+        aboutButton.draw(graphics2d);
         exitButton.draw(graphics2d);
     }
 }

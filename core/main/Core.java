@@ -3,16 +3,16 @@ package core.main;
 import resources.ResourceManager;
 import ui.GameFrame;
 
-public class Core extends Thread {
+public class Core {
 
-    private static ResourceManager resourceManager = new ResourceManager();
-    private static double DELTA_TIME;
+    private static final ResourceManager resourceManager = new ResourceManager();
+    private static double deltaSeconds = (double) 1 / GameConstants.FPS;
+    private final GameFrame gameFrame;
     private boolean isRunning;
     private double deltaTime;
     private long nowTime;
     private long lastTime;
     private long sleepTime;
-    private GameFrame gameFrame;
 
     public Core() {
         isRunning = false;
@@ -27,8 +27,8 @@ public class Core extends Thread {
         return resourceManager;
     }
 
-    public static double getDeltaTime() {
-        return DELTA_TIME / GameConstants.ONE_MILLION;
+    public static double getDeltaSeconds() {
+        return deltaSeconds;
     }
 
     private void update() {
@@ -40,7 +40,7 @@ public class Core extends Thread {
     }
 
     public void init() {
-        gameFrame.init(resourceManager);
+        gameFrame.init();
         isRunning = true;
         lastTime = System.nanoTime();
         gameLoop();
@@ -50,7 +50,6 @@ public class Core extends Thread {
         while (isRunning) {
             updateDeltaTime();
             if (deltaTime >= GameConstants.TIME_PER_TICK) {
-                DELTA_TIME = deltaTime;
                 processFrame();
             } else {
                 sleepIfNeeded();

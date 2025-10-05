@@ -2,7 +2,6 @@ package modes.levels;
 
 import entities.entity.Entity;
 import modes.Mode;
-import resources.ResourceManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,60 +9,41 @@ import java.util.List;
 
 public class IsometricLevel extends Mode {
 
+    private final List<Entity> enemies = new ArrayList<>();
+    private final List<Entity> items = new ArrayList<>();
+    private final List<Entity> npcs = new ArrayList<>();
+    private final List<Entity> obstacles = new ArrayList<>();
+    private final IsometricBackGround background;
     private Entity player;
-    private List<Entity> enemies = new ArrayList<>();
-    private List<Entity> items = new ArrayList<>();
-    private List<Entity> npcs = new ArrayList<>();
-    private List<Entity> obstacles = new ArrayList<>();
-    private IsometricBackGround background;
 
-    public IsometricLevel(ResourceManager resourceManager) {
-        super(resourceManager);
-        background = new IsometricBackGround(resourceManager);
+    public IsometricLevel() {
+        super();
+        background = new IsometricBackGround();
     }
 
     @Override
     public void update() {
         updateEntities();
-        updatePhysics();
         if (background != null) {
             background.update(player);
         }
     }
 
-    public void updateEntities() {
+    private void updateEntities() {
         if (player != null) {
             player.update();
-        }
-        for (Entity enemy : enemies) {
-            enemy.update();
-        }
-        for (Entity item : items) {
-            item.update();
-        }
-        for (Entity npc : npcs) {
-            npc.update();
-        }
-        for (Entity obstacle : obstacles) {
-            obstacle.update();
-        }
-    }
-
-    public void updatePhysics() {
-        if (player != null) {
             player.updatePhysics();
         }
-        for (Entity enemy : enemies) {
-            enemy.updatePhysics();
-        }
-        for (Entity item : items) {
-            item.updatePhysics();
-        }
-        for (Entity npc : npcs) {
-            npc.updatePhysics();
-        }
-        for (Entity obstacle : obstacles) {
-            obstacle.updatePhysics();
+        updateEntityList(enemies);
+        updateEntityList(items);
+        updateEntityList(npcs);
+        updateEntityList(obstacles);
+    }
+
+    private void updateEntityList(List<Entity> entities) {
+        for (Entity entity : entities) {
+            entity.update();
+            entity.updatePhysics();
         }
     }
 
@@ -75,11 +55,11 @@ public class IsometricLevel extends Mode {
         drawEntities(graphics2d);
     }
 
-    public void drawBackground(Graphics2D graphics2d) {
+    private void drawBackground(Graphics2D graphics2d) {
         background.draw(graphics2d);
     }
 
-    public void drawEntities(Graphics2D graphics2d) {
+    private void drawEntities(Graphics2D graphics2d) {
         if (player != null) {
             player.draw(graphics2d);
         }

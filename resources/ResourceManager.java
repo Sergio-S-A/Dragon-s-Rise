@@ -19,7 +19,8 @@ public class ResourceManager {
     public BufferedImage loadImage(String fileName, int width, int height) {
         String key = buildImageKey(fileName, width, height);
         return cacheResource(imageCache, key,
-                () -> resizeImage(ResourceLoader.loadImage(GameConstants.IMAGE_PATH + fileName), width, height));
+                () -> resizeImage(ResourceLoader.loadImage(GameConstants.IMAGE_PATH + fileName), width, height)
+        );
     }
 
     private String buildImageKey(String fileName, int width, int height) {
