@@ -1,15 +1,13 @@
 package core.main;
 
-import resources.ResourceManager;
 import ui.GameFrame;
 
 public class Core {
 
-    private static final ResourceManager resourceManager = new ResourceManager();
-    private static double deltaSeconds = (double) 1 / GameConstants.FPS;
+    private static final float deltaSeconds = (float) 1 / GameConstants.FPS;
     private final GameFrame gameFrame;
     private boolean isRunning;
-    private double deltaTime;
+    private float deltaTime;
     private long nowTime;
     private long lastTime;
     private long sleepTime;
@@ -23,11 +21,7 @@ public class Core {
         gameFrame = new GameFrame();
     }
 
-    public static ResourceManager getResourceManager() {
-        return resourceManager;
-    }
-
-    public static double getDeltaSeconds() {
+    public static float getDeltaSeconds() {
         return deltaSeconds;
     }
 

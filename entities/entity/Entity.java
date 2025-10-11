@@ -12,15 +12,17 @@ public abstract class Entity {
     private final Vector2D velocity;
     private final Vector2D acceleration;
     private final Vector2D force;
-    protected double forceScale;
-    private double mass;
-    private double maxSpeed;
-    private double maxAcceleration;
-    private double frictionCoefficient;
+    private float forceScale;
+    private float mass;
+    private float inverseMass;
+    private float maxSpeed;
+    private float maxAcceleration;
+    private float frictionCoefficient;
 
     public Entity(EntityBuilder entityBuilder) {
         this.position = entityBuilder.position;
         this.mass = entityBuilder.mass;
+        this.inverseMass = 1 / entityBuilder.mass;
         this.maxSpeed = entityBuilder.maxSpeed;
         this.maxAcceleration = entityBuilder.maxAcceleration;
         this.physicsUpdater = entityBuilder.physicsUpdater;
@@ -57,71 +59,76 @@ public abstract class Entity {
         return force;
     }
 
-    public double getMass() {
-        return mass;
-    }
-
-    public void setMass(double mass) {
-        this.mass = mass;
-    }
-
-    public double getFrictionCoefficient() {
-        return frictionCoefficient;
-    }
-
-    public void setFrictionCoefficient(double frictionCoefficient) {
-        this.frictionCoefficient = frictionCoefficient;
-    }
-
-    public double getMaxSpeed() {
-        return maxSpeed;
-    }
-
-    public void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed = maxSpeed;
-    }
-
-    public double getMaxAcceleration() {
-        return maxAcceleration;
-    }
-
-    public void setMaxAcceleration(double maxAcceleration) {
-        this.maxAcceleration = maxAcceleration;
-    }
-
-    public double getForceScale() {
+    public float getForceScale() {
         return forceScale;
     }
 
-    public void setForceScale(double forceScale) {
+    public void setForceScale(float forceScale) {
         this.forceScale = forceScale;
+    }
+
+    public float getMass() {
+        return mass;
+    }
+
+    public void setMass(float mass) {
+        this.mass = mass > 0 ? mass : this.mass;
+        this.inverseMass = mass > 0 ? 1 / mass : this.inverseMass;
+    }
+
+    public float getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(float maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+    public float getMaxAcceleration() {
+        return maxAcceleration;
+    }
+
+    public void setMaxAcceleration(float maxAcceleration) {
+        this.maxAcceleration = maxAcceleration;
+    }
+
+    public float getFrictionCoefficient() {
+        return frictionCoefficient;
+    }
+
+    public void setFrictionCoefficient(float frictionCoefficient) {
+        this.frictionCoefficient = frictionCoefficient;
+    }
+
+    public float getInverseMass() {
+        return inverseMass;
     }
 
     public static abstract class EntityBuilder<T extends EntityBuilder<T>> {
 
         private final Vector2D position;
-        private double mass = 1;
-        private double maxSpeed = 1;
-        private double maxAcceleration = 1;
-        private double frictionCoefficient = 0.1;
-        private double forceScale = 0.01;
+        private float mass = 1;
+        private float maxSpeed = 1;
+        private float maxAcceleration = 1;
+        private float frictionCoefficient = 0.1f;
+        private float forceScale = 0.1f;
         private PhysicsUpdater physicsUpdater;
 
         public EntityBuilder(Vector2D position) {
             this.position = position;
         }
 
-        public T setMass(double mass) {
+        public T setMass(float mass) {
             this.mass = mass;
             return self();
         }
 
-        public T setMaxSpeed(double maxSpeed) {
+        public T setMaxSpeed(float maxSpeed) {
             this.maxSpeed = maxSpeed;
             return self();
         }
 
-        public T setMaxAcceleration(double maxAcceleration) {
+        public T setMaxAcceleration(float maxAcceleration) {
             this.maxAcceleration = maxAcceleration;
             return self();
         }
@@ -131,12 +138,12 @@ public abstract class Entity {
             return self();
         }
 
-        public T setFrictionCoefficient(double frictionCoefficient) {
+        public T setFrictionCoefficient(float frictionCoefficient) {
             this.frictionCoefficient = frictionCoefficient;
             return self();
         }
 
-        public T setForceScale(double forceScale) {
+        public T setForceScale(float forceScale) {
             this.forceScale = forceScale;
             return self();
         }

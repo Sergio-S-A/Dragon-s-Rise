@@ -6,23 +6,22 @@ import entities.entity.Entity;
 
 import java.awt.event.KeyEvent;
 
-public class PlayerController implements PhysicsUpdater {
+public class PlayerController extends PhysicsUpdater {
 
-    private PhysicsEngine physicsEngine;
 
-    private Keyboard keyboard;
-    private double forceX;
-    private double forceY;
+    private final Keyboard keyboard;
+    private float forceX;
+    private float forceY;
 
-    public PlayerController() {
-        this.physicsEngine = new PhysicsEngine();
+    public PlayerController(PhysicsStrategy physicsStrategy) {
+        super(physicsStrategy);
         this.keyboard = InputManager.getInstance().getKeyboard();
     }
 
     @Override
     public void update(Entity entity) {
         processInputToMove(entity);
-        physicsEngine.update(entity);
+        updatePhysics(entity);
     }
 
     private void processInputToMove(Entity entity) {

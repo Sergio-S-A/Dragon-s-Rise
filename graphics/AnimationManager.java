@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 public class AnimationManager {
 
@@ -8,10 +9,16 @@ public class AnimationManager {
     private BufferedImage[][] runFrames;
     private BufferedImage[][] attackFrames;
     private AnimationState currentState = AnimationState.IDLE;
-    private int frameCounter = 0;
+    private Map<AnimationState, Long> animationSpeeds;
     private int currentFrameIndex = 0;
     private Direction currentDirection = Direction.NORTH;
-    private int ANIMATION_SPEED = 5;
+    private long nowTime, lastTime;
+
+    public AnimationManager(Map<AnimationState, Long> animationSpeeds) {
+        this.animationSpeeds = animationSpeeds;
+        nowTime = 0;
+        lastTime = System.nanoTime();
+    }
 
     public void loadIdleAnimations(BufferedImage[][] frames) {
         this.idleFrames = frames;
@@ -41,14 +48,15 @@ public class AnimationManager {
     }
 
     private void resetAnimationCounters() {
-        frameCounter = 0;
         currentFrameIndex = 0;
     }
 
     private void advanceAnimationFrame() {
-        frameCounter++;
-        if (frameCounter >= ANIMATION_SPEED) {
-            frameCounter = 0;
+        nowTime += System.nanoTime() - lastTime;
+        lastTime = System.nanoTime();
+        long currentAnimationSpeed = animationSpeeds.get(currentState);
+        if (nowTime > currentAnimationSpeed) {
+            nowTime = 0;
             currentFrameIndex = (currentFrameIndex + 1) % getCurrentAnimationLength();
         }
     }
@@ -70,10 +78,6 @@ public class AnimationManager {
         return animationFrames[currentFrameIndex];
     }
 
-    public void setAnimationSpeed(int speed) {
-        this.ANIMATION_SPEED = speed;
-    }
-
     public Direction getCurrentDirection() {
         return currentDirection;
     }
@@ -82,7 +86,11 @@ public class AnimationManager {
         this.currentDirection = direction;
     }
 
-    private enum AnimationState {
+    public void setAnimationSpeeds(Map<AnimationState, Long> animationSpeeds) {
+        this.animationSpeeds = animationSpeeds;
+    }
+
+    public enum AnimationState {
         IDLE,
         RUNNING,
         ATTACKING

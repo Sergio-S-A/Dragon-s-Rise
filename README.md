@@ -13,10 +13,14 @@ Un prototipo de videojuego 2D desarrollado en **Java puro** que sirve como base 
 - Animaciones fluidas  
 - Gestión de recursos (imágenes, sonidos, fuentes)  
 - Control por teclado y ratón  
+
 ---
+
 ## Requisitos
 - Java **17** o superior  
+
 ---
+
 ## Estructura del Proyecto
 ```
 src/
@@ -29,13 +33,17 @@ src/
 ├── modes/ # Modos de juego y menús
 └── resources/ # Recursos del juego
 ```
+
 ## Cómo Ejecutar
+
 Clona el repositorio:
 ```
 git clone https://github.com/tu-usuario/draons-rise.git
 cd draons-rise
-Compila y ejecuta
+Compila y ejecuta:
+
 ```
+
 Copiar código
 ```
 mvn clean compile exec:java -Dexec.mainClass="core.main.Main"
@@ -49,4 +57,3 @@ Licencia
 ```
 Este proyecto está bajo la licencia GPL-3.0.
 Consulta el archivo LICENSE para más información.
-(https://github.com/Sergio-S-A/Dragon-s-Rise)

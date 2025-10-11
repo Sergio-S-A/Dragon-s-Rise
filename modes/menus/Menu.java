@@ -9,6 +9,7 @@ import ui.components.Text;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 public class Menu extends Mode {
 
@@ -43,27 +44,27 @@ public class Menu extends Mode {
     private Font buttonFont;
     private BufferedImage backgroundImage;
 
-    public Menu() {
-        this.backgroundImage = resourceManager.loadImage(
-                "camaraSubterranea.jpg",
-                GameConstants.WINDOW_WIDTH,
-                GameConstants.WINDOW_HEIGHT
-        );
-        initializeMenu();
-    }
+    private Map<String, Dimension> assets;
 
-    private void initializeMenu() {
+    public Menu() {
         loadResources();
         createUIComponents();
     }
 
     private void loadResources() {
         loadFonts();
+        loadImages();
     }
 
     private void loadFonts() {
-        titleFont = resourceManager.loadFont(FONT_PATH, TITLE_FONT_SIZE);
-        buttonFont = resourceManager.loadFont(FONT_PATH, BUTTON_FONT_SIZE);
+        titleFont = resourceManager.getFont(GameConstants.DEFAULT_FONT_PATH, GameConstants.DEFAULT_FONT_SIZE);
+        titleFont = titleFont.deriveFont(TITLE_FONT_SIZE + 0f);
+        buttonFont = resourceManager.getFont(GameConstants.DEFAULT_FONT_PATH, GameConstants.DEFAULT_FONT_SIZE);
+        buttonFont = buttonFont.deriveFont(BUTTON_FONT_SIZE + 0f);
+    }
+
+    private void loadImages() {
+        backgroundImage = resourceManager.getImage("camaraSubterranea.jpg", GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
     }
 
     private void createUIComponents() {
@@ -97,7 +98,7 @@ public class Menu extends Mode {
         exitButton.setActionButton(() -> System.exit(0));
     }
 
-    private Button createMenuButton(String text, double yPosition) {
+    private Button createMenuButton(String text, float yPosition) {
         Text buttonText = createButtonText(text);
         Vector2D buttonPosition = createButtonPosition(yPosition);
 
@@ -119,28 +120,28 @@ public class Menu extends Mode {
     }
 
     private Vector2D createCenteredPosition() {
-        double centeredX = (double) GameConstants.WINDOW_WIDTH_MEDIUM;
+        float centeredX = GameConstants.WINDOW_WIDTH_MEDIUM;
         return new Vector2D(centeredX, TITLE_Y_POSITION);
     }
 
-    private Vector2D createButtonPosition(double yPosition) {
-        double buttonX = (double) GameConstants.WINDOW_WIDTH_MEDIUM - BUTTON_WIDTH_OFFSET;
+    private Vector2D createButtonPosition(float yPosition) {
+        float buttonX = GameConstants.WINDOW_WIDTH_MEDIUM - BUTTON_WIDTH_OFFSET;
         return new Vector2D(buttonX, yPosition);
     }
 
-    private double getPlayButtonYPosition() {
-        return (double) GameConstants.WINDOW_HEIGHT_MEDIUM - FIRST_BUTTON_Y_OFFSET;
+    private float getPlayButtonYPosition() {
+        return GameConstants.WINDOW_HEIGHT_MEDIUM - FIRST_BUTTON_Y_OFFSET;
     }
 
-    private double getOptionsButtonYPosition() {
+    private float getOptionsButtonYPosition() {
         return getPlayButtonYPosition() + BUTTON_SPACING;
     }
 
-    private double getAboutButtonYPosition() {
+    private float getAboutButtonYPosition() {
         return getOptionsButtonYPosition() + BUTTON_SPACING;
     }
 
-    private double getExitButtonYPosition() {
+    private float getExitButtonYPosition() {
         return getAboutButtonYPosition() + BUTTON_SPACING;
     }
 

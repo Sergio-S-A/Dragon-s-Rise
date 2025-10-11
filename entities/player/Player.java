@@ -10,23 +10,39 @@ import graphics.AnimationManager;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Player extends Mob {
 
     private final Keyboard keyboard;
     private final Vector2D isometricCenter;
+    private final Map<Integer, AnimationManager.Direction> directionMap;
 
     public Player(PlayerBuilder playerBuilder) {
         super(playerBuilder);
         this.keyboard = InputManager.getInstance().getKeyboard();
         this.isometricCenter = getIsometricCenter();
+        directionMap = new HashMap<>();
+        loadDirectionMap();
         loadAnimations();
     }
 
+    private void loadDirectionMap() {
+        directionMap.put(KeyEvent.VK_UP, AnimationManager.Direction.NORTH);
+        directionMap.put(KeyEvent.VK_DOWN, AnimationManager.Direction.SOUTH);
+        directionMap.put(KeyEvent.VK_LEFT, AnimationManager.Direction.WEST);
+        directionMap.put(KeyEvent.VK_RIGHT, AnimationManager.Direction.EAST);
+        directionMap.put(KeyEvent.VK_W, AnimationManager.Direction.NORTH);
+        directionMap.put(KeyEvent.VK_S, AnimationManager.Direction.SOUTH);
+        directionMap.put(KeyEvent.VK_A, AnimationManager.Direction.WEST);
+        directionMap.put(KeyEvent.VK_D, AnimationManager.Direction.EAST);
+    }
+
     private Vector2D getIsometricCenter() {
-        double offsetX = GameConstants.WINDOW_WIDTH_MEDIUM;
-        double offsetY = GameConstants.WINDOW_HEIGHT_QUARTER;
-        return new Vector2D(offsetX - (double) getTileSize() / 2, offsetY + (double) getTileSize() / 2);
+        float offsetX = GameConstants.WINDOW_WIDTH_MEDIUM;
+        float offsetY = GameConstants.WINDOW_HEIGHT_MEDIUM;
+        return new Vector2D(offsetX - (float) getTileSize() / 2, offsetY - getTileSize());
     }
 
     @Override
@@ -48,13 +64,18 @@ public class Player extends Mob {
 
     @Override
     public void loadAnimations() {
-        BufferedImage[][] idleAnimation = loadAnimation(getPATH_IDLE_FRAMES(), getTileSize() * 4, getTileSize() * 4);
+        int NUM_OF_DIRECTIONS = 4;
+        final int NUM_OF_ATTACK_FRAMES = 15;
+        final int NUM_OF_RUN_FRAMES = 8;
+        final int NUM_OF_IDLE_FRAMES = 4;
+
+        BufferedImage[][] idleAnimation = loadAnimation(getPATH_IDLE_FRAMES(), NUM_OF_IDLE_FRAMES, NUM_OF_DIRECTIONS);
         animationManager.loadIdleAnimations(idleAnimation);
 
-        BufferedImage[][] runAnimation = loadAnimation(getPATH_RUN_FRAMES(), getTileSize() * 8, getTileSize() * 4);
+        BufferedImage[][] runAnimation = loadAnimation(getPATH_RUN_FRAMES(), NUM_OF_RUN_FRAMES, NUM_OF_DIRECTIONS);
         animationManager.loadRunAnimations(runAnimation);
 
-        BufferedImage[][] attackAnimation = loadAnimation(getPATH_ATTACK_FRAMES(), getTileSize() * 15, getTileSize() * 4);
+        BufferedImage[][] attackAnimation = loadAnimation(getPATH_ATTACK_FRAMES(), NUM_OF_ATTACK_FRAMES, NUM_OF_DIRECTIONS);
         animationManager.loadAttackAnimations(attackAnimation);
     }
 
@@ -72,26 +93,15 @@ public class Player extends Mob {
     }
 
     private AnimationManager.Direction getDirection(Keyboard inputs) {
-        if (inputs.isKeyPressed(KeyEvent.VK_UP) || inputs.isKeyPressed(KeyEvent.VK_W)) {
-            isMoving = true;
-            isAttacking = false;
-            return AnimationManager.Direction.NORTH;
+        for (Map.Entry<Integer, AnimationManager.Direction> entry : directionMap.entrySet()) {
+            if (inputs.isKeyPressed(entry.getKey())) {
+                isMoving = true;
+                isAttacking = false;
+                return entry.getValue();
+            }
         }
-        if (inputs.isKeyPressed(KeyEvent.VK_DOWN) || inputs.isKeyPressed(KeyEvent.VK_S)) {
-            isMoving = true;
-            isAttacking = false;
-            return AnimationManager.Direction.SOUTH;
-        }
-        if (inputs.isKeyPressed(KeyEvent.VK_LEFT) || inputs.isKeyPressed(KeyEvent.VK_A)) {
-            isMoving = true;
-            isAttacking = false;
-            return AnimationManager.Direction.WEST;
-        }
-        if (inputs.isKeyPressed(KeyEvent.VK_RIGHT) || inputs.isKeyPressed(KeyEvent.VK_D)) {
-            isMoving = true;
-            isAttacking = false;
-            return AnimationManager.Direction.EAST;
-        }
+        isMoving = false;
+        isAttacking = false;
         return animationManager.getCurrentDirection();
     }
 

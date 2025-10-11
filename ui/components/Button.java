@@ -2,9 +2,9 @@ package ui.components;
 
 import core.inputs.InputManager;
 import core.inputs.Mouse;
-import core.main.Core;
 import core.main.GameConstants;
 import core.physics.Vector2D;
+import resources.ResourceManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -73,14 +73,10 @@ public class Button extends Component {
     }
 
     private boolean isMouseInsideButton() {
-        return isPointInBounds(mousePosition, buttonPosition, width, height);
-    }
-
-    private boolean isPointInBounds(Vector2D point, Vector2D bounds, int width, int height) {
-        return point.x() >= bounds.x() &&
-                point.x() <= bounds.x() + width &&
-                point.y() >= bounds.y() &&
-                point.y() <= bounds.y() + height;
+        return mousePosition.x() >= buttonPosition.x() &&
+                mousePosition.x() <= buttonPosition.x() + width &&
+                mousePosition.y() >= buttonPosition.y() &&
+                mousePosition.y() <= buttonPosition.y() + height;
     }
 
     @Override
@@ -109,9 +105,9 @@ public class Button extends Component {
     }
 
     private Vector2D calculateCenteredTextPosition() {
-        double centeredX = buttonPosition.x() + (double) width * GameConstants.BUTTON_TEXT_HORIZONTAL_CENTER_RATIO;
-        double centeredY = buttonPosition.y() + (double) height * GameConstants.BUTTON_TEXT_VERTICAL_CENTER_RATIO
-                + (double) textComponent.getHeight() / GameConstants.BUTTON_TEXT_BASELINE_ADJUSTMENT;
+        float centeredX = (float) (buttonPosition.x() + width * GameConstants.BUTTON_TEXT_HORIZONTAL_CENTER_RATIO);
+        float centeredY = (float) (buttonPosition.y() + height * GameConstants.BUTTON_TEXT_VERTICAL_CENTER_RATIO
+                + textComponent.getHeight() / GameConstants.BUTTON_TEXT_BASELINE_ADJUSTMENT);
         return new Vector2D(centeredX, centeredY);
     }
 
@@ -174,7 +170,7 @@ public class Button extends Component {
             return this;
         }
 
-        public Builder setButtonPosition(double x, double y) {
+        public Builder setButtonPosition(float x, float y) {
             buttonPosition.set(x, y);
             return this;
         }
@@ -244,7 +240,7 @@ public class Button extends Component {
         }
 
         private BufferedImage loadDefaultPressedImage() {
-            return Core.getResourceManager().loadImage(
+            return ResourceManager.getInstance().getImage(
                     GameConstants.DEFAULT_PRESSED_IMAGE_PATH,
                     GameConstants.DEFAULT_BUTTON_WIDTH,
                     GameConstants.DEFAULT_BUTTON_HEIGHT
@@ -252,7 +248,7 @@ public class Button extends Component {
         }
 
         private BufferedImage loadDefaultUnpressedImage() {
-            return Core.getResourceManager().loadImage(
+            return ResourceManager.getInstance().getImage(
                     GameConstants.DEFAULT_UNPRESSED_IMAGE_PATH,
                     GameConstants.DEFAULT_BUTTON_WIDTH,
                     GameConstants.DEFAULT_BUTTON_HEIGHT

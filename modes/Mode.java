@@ -1,6 +1,5 @@
 package modes;
 
-import core.main.Core;
 import resources.ResourceManager;
 
 import java.awt.*;
@@ -11,7 +10,7 @@ public abstract class Mode {
     protected final ResourceManager resourceManager;
 
     public Mode() {
-        this.resourceManager = Core.getResourceManager();
+        this.resourceManager = ResourceManager.getInstance();
     }
 
     public static Mode getNowMode() {

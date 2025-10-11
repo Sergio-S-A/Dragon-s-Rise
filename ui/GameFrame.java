@@ -5,6 +5,7 @@ import core.inputs.Keyboard;
 import core.inputs.Mouse;
 import core.main.GameConstants;
 import graphics.Stage;
+import loading.LoadingManager;
 
 import javax.swing.*;
 
@@ -43,6 +44,9 @@ public class GameFrame extends JFrame {
 
         InputManager.getInstance().setKeyboard(keyboard);
         InputManager.getInstance().setMouse(mouse);
+
+        LoadingManager loadingManager = new LoadingManager();
+        loadingManager.loadAssets();
 
         stage = new Stage();
         stage.addMouseListener(mouse);

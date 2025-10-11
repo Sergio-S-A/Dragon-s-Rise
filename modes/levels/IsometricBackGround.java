@@ -1,6 +1,5 @@
 package modes.levels;
 
-import core.main.Core;
 import core.main.GameConstants;
 import entities.entity.Entity;
 import modes.menus.LevelData;
@@ -20,11 +19,11 @@ public class IsometricBackGround {
     private int screenX, screenY;
 
     public IsometricBackGround() {
-        this.resourceManager = Core.getResourceManager();
+        this.resourceManager = ResourceManager.getInstance();
         this.imagesData = LevelData.testLevel;
         this.TILE_SIZE = GameConstants.TILE_SIZE;
         this.camera = new Camera(TILE_SIZE);
-        this.ratio = 19;
+        this.ratio = 11;
     }
 
     public void update(Entity player) {
@@ -63,7 +62,7 @@ public class IsometricBackGround {
 
     private void drawTile(Graphics2D graphics2d, int tileId) {
         String tilePath = createTilePath(tileId);
-        graphics2d.drawImage(resourceManager.loadImage(tilePath, TILE_SIZE, TILE_SIZE), screenX, screenY, null);
+        graphics2d.drawImage(resourceManager.getImage(tilePath, TILE_SIZE, TILE_SIZE), screenX, screenY, null);
     }
 
     private String createTilePath(int tileId) {

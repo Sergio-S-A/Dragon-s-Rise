@@ -1,6 +1,5 @@
 package entities.mobs;
 
-import core.main.Core;
 import core.main.GameConstants;
 import core.physics.Vector2D;
 import entities.entity.Entity;
@@ -9,6 +8,8 @@ import resources.ResourceManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Mob extends Entity {
 
@@ -17,18 +18,18 @@ public abstract class Mob extends Entity {
     private final String PATH_ATTACK_FRAMES;
     private final String PATH_RUN_FRAMES;
     private final String PATH_IDLE_FRAMES;
+    private final int tileSize;
     protected boolean isAttacking;
     protected boolean isMoving;
-    private int tileSize;
 
     public Mob(MobBuilder mobBuilder) {
         super(mobBuilder);
-        this.animationManager = new AnimationManager();
-        this.resourceManager = Core.getResourceManager();
+        this.animationManager = mobBuilder.animationManager;
+        this.resourceManager = ResourceManager.getInstance();
         this.tileSize = mobBuilder.tileSize;
-        this.PATH_IDLE_FRAMES = mobBuilder.PATH_IDLE_FRAMES;
-        this.PATH_RUN_FRAMES = mobBuilder.PATH_RUN_FRAMES;
-        this.PATH_ATTACK_FRAMES = mobBuilder.PATH_ATTACK_FRAMES;
+        this.PATH_IDLE_FRAMES = mobBuilder.pathIdleFrames;
+        this.PATH_RUN_FRAMES = mobBuilder.pathRunFrames;
+        this.PATH_ATTACK_FRAMES = mobBuilder.pathAttackFrames;
         this.isAttacking = false;
         this.isMoving = false;
     }
@@ -43,9 +44,12 @@ public abstract class Mob extends Entity {
 
     public abstract void loadAnimations();
 
-    protected BufferedImage[][] loadAnimation(String path, int width, int height) {
-        BufferedImage image = resourceManager.loadImage(path, width, height);
-        BufferedImage[][] animation = new BufferedImage[height / tileSize][width / tileSize];
+    protected BufferedImage[][] loadAnimation(String path, int columns, int rows) {
+        int width = columns * tileSize;
+        int height = rows * tileSize;
+        BufferedImage image = resourceManager.getImage(path, width, height);
+
+        BufferedImage[][] animation = new BufferedImage[rows][columns];
         for (int i = 0; i < animation.length; i++) {
             for (int j = 0; j < animation[i].length; j++) {
                 animation[i][j] = image.getSubimage(j * tileSize, i * tileSize, tileSize, tileSize);
@@ -72,17 +76,19 @@ public abstract class Mob extends Entity {
 
     public static abstract class MobBuilder<T extends MobBuilder<T>> extends EntityBuilder<T> {
 
+        private final AnimationManager animationManager;
         private int tileSize;
-        private String PATH_ATTACK_FRAMES;
-        private String PATH_RUN_FRAMES;
-        private String PATH_IDLE_FRAMES;
+        private String pathAttackFrames;
+        private String pathRunFrames;
+        private String pathIdleFrames;
 
         public MobBuilder(Vector2D position) {
             super(position);
-            this.tileSize = GameConstants.TILE_SIZE;
-            PATH_IDLE_FRAMES = "";
-            PATH_RUN_FRAMES = "";
-            PATH_ATTACK_FRAMES = "";
+            tileSize = GameConstants.TILE_SIZE_BIG;
+            animationManager = new AnimationManager(new HashMap<>());
+            pathIdleFrames = "";
+            pathRunFrames = "";
+            pathAttackFrames = "";
         }
 
 
@@ -91,18 +97,23 @@ public abstract class Mob extends Entity {
             return self();
         }
 
-        public T setPATH_ATTACK_FRAMES(String PATH_ATTACK_FRAMES) {
-            this.PATH_ATTACK_FRAMES = PATH_ATTACK_FRAMES;
+        public T setPathAttackFrames(String pathAttackFrames) {
+            this.pathAttackFrames = pathAttackFrames;
             return self();
         }
 
-        public T setPATH_RUN_FRAMES(String PATH_RUN_FRAMES) {
-            this.PATH_RUN_FRAMES = PATH_RUN_FRAMES;
+        public T setPathRunFrames(String pathRunFrames) {
+            this.pathRunFrames = pathRunFrames;
             return self();
         }
 
-        public T setPATH_IDLE_FRAMES(String PATH_IDLE_FRAMES) {
-            this.PATH_IDLE_FRAMES = PATH_IDLE_FRAMES;
+        public T setPathIdleFrames(String pathIdleFrames) {
+            this.pathIdleFrames = pathIdleFrames;
+            return self();
+        }
+
+        public T setAnimationSpeeds(Map<AnimationManager.AnimationState, Long> animationSpeeds) {
+            this.animationManager.setAnimationSpeeds(animationSpeeds);
             return self();
         }
 

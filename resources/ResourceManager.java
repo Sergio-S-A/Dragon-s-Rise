@@ -11,20 +11,39 @@ import java.util.function.Supplier;
 
 public class ResourceManager {
 
+    private static ResourceManager instance;
+
     private final Map<String, BufferedImage> imageCache = new HashMap<>();
     private final Map<String, Font> fontCache = new HashMap<>();
     private final Map<String, Clip> audioCache = new HashMap<>();
 
+    private ResourceManager() {
+    }
 
-    public BufferedImage loadImage(String fileName, int width, int height) {
-        String key = buildImageKey(fileName, width, height);
-        return cacheResource(imageCache, key,
-                () -> resizeImage(ResourceLoader.loadImage(GameConstants.IMAGE_PATH + fileName), width, height)
+    public static ResourceManager getInstance() {
+        if (instance == null) {
+            instance = new ResourceManager();
+        }
+        return instance;
+    }
+
+    public void preloadImage(Map<String, Dimension> assets) {
+        assets.forEach(
+                (filname, dimension) -> {
+                    String key = buildImageKey(filname, dimension.width, dimension.height);
+                    BufferedImage bufferedImage = ResourceLoader.loadImage(GameConstants.IMAGE_PATH + filname);
+                    bufferedImage = resizeImage(bufferedImage, dimension.width, dimension.height);
+                    imageCache.put(key, bufferedImage);
+                }
         );
     }
 
     private String buildImageKey(String fileName, int width, int height) {
-        return String.format("%s_%dx%d", fileName, width, height);
+        return fileName + "_" + width + "x" + height;
+    }
+
+    public BufferedImage getImage(String fileName, int width, int height) {
+        return imageCache.get(buildImageKey(fileName, width, height));
     }
 
     private BufferedImage resizeImage(BufferedImage original, int width, int height) {
@@ -36,14 +55,22 @@ public class ResourceManager {
         return resized;
     }
 
-    public Font loadFont(String fileName, float size) {
-        String key = buildFontKey(fileName, size);
-        return cacheResource(fontCache, key,
-                () -> ResourceLoader.loadFont(GameConstants.FONT_PATH + fileName, size));
+    public void preloadFont(Map<String, Integer> assets) {
+        assets.forEach(
+                (filname, size) -> {
+                    String key = buildFontKey(filname, size);
+                    Font font = ResourceLoader.loadFont(GameConstants.FONT_PATH + filname, size);
+                    fontCache.put(key, font);
+                }
+        );
+    }
+
+    public Font getFont(String fileName, float size) {
+        return fontCache.get(buildFontKey(fileName, size));
     }
 
     private String buildFontKey(String fileName, float size) {
-        return String.format("%s_%f", fileName, size);
+        return "s" + fileName + "_" + size;
     }
 
     public Clip loadAudio(String fileName) {
@@ -59,5 +86,11 @@ public class ResourceManager {
                 throw new RuntimeException("Error loading resource: " + key, e);
             }
         });
+    }
+
+    public void clearCache() {
+        imageCache.clear();
+        fontCache.clear();
+        audioCache.clear();
     }
 }

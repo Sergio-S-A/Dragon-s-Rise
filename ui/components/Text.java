@@ -1,16 +1,16 @@
 package ui.components;
 
-import core.main.Core;
 import core.main.GameConstants;
 import core.physics.Vector2D;
+import resources.ResourceManager;
 
 import java.awt.*;
 
 public class Text extends Component {
 
+    private final Vector2D position;
     // Text properties
     private String text;
-    private final Vector2D position;
     private Color color;
     private Font font;
     private Alignment alignment;
@@ -118,7 +118,7 @@ public class Text extends Component {
     }
 
     // Setters and Getters
-    public void setPosition(double x, double y) {
+    public void setPosition(float x, float y) {
         position.set(x, y);
     }
 
@@ -255,7 +255,7 @@ public class Text extends Component {
             return this;
         }
 
-        public Builder setPosition(double x, double y) {
+        public Builder setPosition(float x, float y) {
             if (position != null) {
                 this.position.set(x, y);
             }
@@ -276,10 +276,6 @@ public class Text extends Component {
             return this;
         }
 
-        public Builder setFont(String fontPath, int size) {
-            Font customFont = Core.getResourceManager().loadFont(fontPath, Math.max(size, 1));
-            return setFont(customFont);
-        }
 
         public Builder setAlignment(Alignment alignment) {
             this.alignment = alignment != null ? alignment : Alignment.LEFT;
@@ -319,7 +315,7 @@ public class Text extends Component {
 
         private Font createDefaultFont() {
             try {
-                return Core.getResourceManager().loadFont(GameConstants.DEFAULT_FONT_PATH, GameConstants.DEFAULT_FONT_SIZE);
+                return ResourceManager.getInstance().getFont(GameConstants.DEFAULT_FONT_PATH, GameConstants.DEFAULT_FONT_SIZE);
             } catch (Exception e) {
                 return new Font(Font.SANS_SERIF, Font.PLAIN, GameConstants.DEFAULT_FONT_SIZE);
             }
