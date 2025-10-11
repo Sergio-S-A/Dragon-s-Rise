@@ -101,7 +101,6 @@ public class Player extends Mob {
             }
         }
         isMoving = false;
-        isAttacking = false;
         return animationManager.getCurrentDirection();
     }
 
