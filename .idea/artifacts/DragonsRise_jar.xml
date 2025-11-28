@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="DragonsRise:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/DragonsRise_jar</output-path>
-    <root id="archive" name="DragonsRise.jar">
-      <element id="module-output" name="DragonsRise" />
-    </root>
-  </artifact>
-</component>
